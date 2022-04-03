@@ -26,7 +26,8 @@ type Page {
 pub fn main() {
   let args = start_arguments()
   try name =
-    map_error(over: list.first(args), with: fn(_e) { "Name is required." })
+    list.first(args)
+    |> map_error(fn(_e) { "Name is required." })
   let req =
     request.new()
     |> request.set_method(Get)
@@ -34,7 +35,8 @@ pub fn main() {
     |> request.set_path(string.append(to: path, suffix: name))
 
   try res =
-    map_error(over: hackney.send(req), with: fn(_e) { "Failed to fetch." })
+    hackney.send(req)
+    |> map_error(fn(_e) { "Failed to fetch." })
 
   let page_decoder =
     dynamic.decode4(
