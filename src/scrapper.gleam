@@ -45,8 +45,13 @@ pub fn main() {
       field("descriptions", of: dynamic.list(dynamic.string)),
     )
   let decoder = field("pages", of: dynamic.list(page_decoder))
-  let json = json.decode(from: res.body, using: decoder)
-  io.debug(json)
+
+  try json =
+    json.decode(from: res.body, using: decoder)
+    |> map_error(fn(_e) { "Failed to decode json." })
+
+  json
+  |> list.each(fn(r) { io.println(r.title) })
 
   Ok(0)
 }
