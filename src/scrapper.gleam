@@ -51,7 +51,11 @@ pub fn main() {
     |> map_error(fn(_e) { "Failed to decode json." })
 
   json
-  |> list.each(fn(r) { io.println(r.title) })
+  |> list.map(fn(r) { list.append([r.title, "\n"], r.descriptions) })
+  |> list.map(fn(r) {
+    list.fold(r, "", fn(a, b) { string.append(to: a, suffix: b) })
+  })
+  |> list.each(fn(r) { io.println(string.append(to: r, suffix: "\n")) })
 
   Ok(0)
 }
